@@ -1,6 +1,6 @@
-# Backend do projeto HERO
+# Backend do projeto MEDIKONLINE
 
-Este repositório contém a parte do servidor em **Node.js** para o projeto **HERO**, uma aplicação que conecta voluntários a ONGs.
+Este repositório contém a parte do servidor em **Node.js** para o projeto **MEDIKONLINE**, uma aplicação que conecta pacientes e médicos.
 
 ## Montagem do ambiente de desenvolvimento
 
@@ -52,24 +52,28 @@ Este repositório contém a parte do servidor em **Node.js** para o projeto **HE
 
 ## Entidades
 
-* ONG
+* Usuário
 
-* Caso
+* Consulta
 
 ## Funcionalidades
 
-* Login de ONG
+* Login com autorização
 
-* Logout de ONG
+* Cadastro
 
-* Cadastro de ONG
+* Agendamento de consultas
 
-* Cadastrar caso
+* Chat com médico
 
-* Listar caso específico de uma ONG
+* Broadcast
 
-* Deletar caso
 
-* Listar todos os casos
 
-* Entrar em contato com a ONG
+Referências:
+
+https://tableless.com.br/criando-uma-aplicacao-de-chat-simples-com-nodejs-e-socket-io/
+
+https://www.codementor.io/@manashkumarchakrobortty/authentication-and-authorization-in-node-js-19brdvhsyw
+
+https://www.luiztools.com.br/post/autenticacao-json-web-token-jwt-em-nodejs/
