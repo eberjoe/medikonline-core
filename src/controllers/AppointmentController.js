@@ -4,31 +4,28 @@ module.exports = {
     async index(request, response) {
         const { page = 1 } = request.query;
 
-        const [count] = await connection('incidents').count();
+        const [count] = await connection('appointments').count();
 
-        const incidents = await connection('incidents')
-            .join('ongs', 'ongs.id', '=', 'incidents.ong_id')
+        const appointments = await connection('appointments')
+            .join('users', 'users.id', '=', 'appointments.doctor_id')
             .limit(5)
             .offset((page - 1) * 5)
             .select([
-                'incidents.*',
-                'ongs.name',
-                'ongs.email',
-                'ongs.whatsapp',
-                'ongs.city',
-                'ongs.uf'
+                'appointments.*',
+                'users.name',
+                'users.crm'
             ]);
 
         response.header('X-Total-Count', count['count(*)']);
 
-        return response.json(incidents);
+        return response.json(appointments);
     },
 
     async create(request, response) {
         const { title, description, value } = request.body;
         const ong_id = request.headers.authorization;
 
-        const [id] = await connection('incidents').insert({
+        const [id] = await connection('appointments').insert({
             title,
             description,
             value,
@@ -40,18 +37,18 @@ module.exports = {
 
     async delete(request, response) {
         const { id } = request.params;
-        const ong_id = request.headers.authorization;
+        const user_id = request.headers.authorization;
 
-        const incident = await connection('incidents')
+        const appointment = await connection('appointments')
             .where('id', id)
             .select('ong_id')
             .first();
 
-        if (incident.ong_id !== ong_id) {
+        if (appointment.patient_id !== user_id) {
             return response.status(401).json({ error: 'Operation not permitted.' });
         }
 
-        await connection('incidents').where('id', id).delete();
+        await connection('appointments').where('id', id).delete();
 
         return response.status(204).send();
     }
