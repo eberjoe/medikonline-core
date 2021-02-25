@@ -4,10 +4,10 @@ module.exports = {
     async index(request, response) {
         const user_id = request.headers.authorization;
 
-        const incidents = await connection('incidents')
+        const appointments = await connection('appointments')
             .where('patient_id', user_id)
             .select('*');
 
-        return response.json(incidents);
+        return response.json(appointments);
     }
 };
