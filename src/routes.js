@@ -11,6 +11,7 @@ const routes = express.Router();
 routes.post('/sessions', SessionController.create);
 
 routes.get('/users', UserController.index);
+routes.get('/users/:id', UserController.check);
 routes.post('/users', UserController.create);
 
 routes.get('/profile', ProfileController.index);

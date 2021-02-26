@@ -1,18 +1,21 @@
 const connection = require('../database/connection');
+const bcrypt = require('bcrypt');
 
 module.exports = {
     async create(request, response) {
-        const { id } = request.body;
+        const { id, password } = request.body;
 
-        const ong = await connection('users')
+        const user = await connection('users')
             .where('id', id)
-            .select('name')
+            .select('*')
             .first();
+        
+        const passMatch = user && await bcrypt.compare(password, user.password);
 
-        if (!ong) {
-            return response.status(400).json({ error: 'No user found with this ID' });
+        if (!user || !passMatch) {
+            return response.status(400).json({ error: 'Could not authenticate' });
         }
 
-        return response.json(ong);
+        return response.json(user);
     }
 };

@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const connection = require('../database/connection');
 
 module.exports = {
@@ -7,17 +7,29 @@ module.exports = {
         return response.json(users);
     },
 
-    async create(request, response) {
-        const { name, crm } = request.body;
+    async check(request, response) {
+        const { id } = request.params;
+        const user = await connection('users')
+            .where('id', id)
+            .select('id')
+            .first();
+        return response.json(user);
+    },
 
-        const id = crypto.randomBytes(4).toString('HEX');
+    async create(request, response) {
+        const { id, password, crm } = request.body;
+
+        const encryptedPass = await bcrypt.hash(password, 12);
     
-        await connection('users').insert({
-            id,
-            name,
-            crm,
-        });
-    
-        return response.json({ id });
+        try {
+            await connection('users').insert({
+                id,
+                password: encryptedPass,
+                crm
+            });
+            return response.json({ id });
+        } catch(err) {
+            console.log('Could not insert user!')
+        }
     }
 };

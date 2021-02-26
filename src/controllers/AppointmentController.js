@@ -41,7 +41,7 @@ module.exports = {
 
         const appointment = await connection('appointments')
             .where('id', id)
-            .select('ong_id')
+            .select('patient_id')
             .first();
 
         if (appointment.patient_id !== user_id) {
