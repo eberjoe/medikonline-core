@@ -1,13 +1,11 @@
 const connection = require('../database/connection');
 
 module.exports = {
-    async index(request, response) {
-        const user_id = request.headers.authorization;
-
+    async index(req, res) {
         const appointments = await connection('appointments')
-            .where('patient_id', user_id)
+            .where(req.userCrm ? 'doctor_id' : 'patient_id', req.userId)
             .select('*');
 
-        return response.json(appointments);
+        return res.json({user: { id: req.userId, crm: req.userCrm }, appointments});
     }
 };
