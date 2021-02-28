@@ -1,55 +1,52 @@
 const connection = require('../database/connection');
 
 module.exports = {
-    async index(request, response) {
-        const { page = 1 } = request.query;
+    async index(req, res) {
+        //const { page = 1 } = req.query;
 
-        const [count] = await connection('appointments').count();
+        //const [count] = await connection('appointments').count();
 
         const appointments = await connection('appointments')
             .join('users', 'users.id', '=', 'appointments.doctor_id')
-            .limit(5)
-            .offset((page - 1) * 5)
+            //.limit(5)
+            //.offset((page - 1) * 5)
             .select([
                 'appointments.*',
-                'users.name',
+                'users.id',
                 'users.crm'
             ]);
 
-        response.header('X-Total-Count', count['count(*)']);
+        //res.header('X-Total-Count', count['count(*)']);
 
-        return response.json(appointments);
+        return res.json(appointments);
     },
 
-    async create(request, response) {
-        const { title, description, value } = request.body;
-        const ong_id = request.headers.authorization;
+    async create(req, res) {
+        const { date, doctor_id } = req.body;
 
         const [id] = await connection('appointments').insert({
-            title,
-            description,
-            value,
-            ong_id,
+            date,
+            doctor_id,
+            patient_id: req.userId,
         });
 
-        return response.json({ id });
+        return res.json({ id });
     },
 
-    async delete(request, response) {
-        const { id } = request.params;
-        const user_id = request.headers.authorization;
+    async delete(req, res) {
+        const { id } = req.params;
 
         const appointment = await connection('appointments')
             .where('id', id)
             .select('patient_id')
             .first();
 
-        if (appointment.patient_id !== user_id) {
-            return response.status(401).json({ error: 'Operation not permitted.' });
+        if (appointment.patient_id !== req.userId && appointment.doctor_id !== req.userId) {
+            return res.status(401).json({ error: 'Operation not permitted.' });
         }
 
         await connection('appointments').where('id', id).delete();
 
-        return response.status(204).send();
+        return res.status(204).send();
     }
 };

@@ -5,7 +5,6 @@ module.exports = {
         const appointments = await connection('appointments')
             .where(req.userCrm ? 'doctor_id' : 'patient_id', req.userId)
             .select('*');
-
         return res.json({user: { id: req.userId, crm: req.userCrm }, appointments});
     }
 };

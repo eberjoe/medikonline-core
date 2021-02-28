@@ -2,22 +2,32 @@ const bcrypt = require('bcrypt');
 const connection = require('../database/connection');
 
 module.exports = {
-    async index(request, response) {
-        const users = await connection('users').select('*');
-        return response.json(users);
+    async index(req, res) {
+        const { isDoc } = req.params;
+        const users = isDoc ?
+            isDoc === 'true' ?
+                await connection('users')
+                    .whereNot('crm', '')
+                :
+                await connection('users')
+                    .where('crm', '')
+            :
+            await connection.select('*')
+                .from('users');
+        return res.json(users);
     },
 
-    async check(request, response) {
-        const { id } = request.params;
+    async check(req, res) {
+        const { id } = req.params;
         const user = await connection('users')
             .where('id', id)
             .select('id')
             .first();
-        return response.json(user);
+        return res.json(user);
     },
 
-    async create(request, response) {
-        const { id, password, crm } = request.body;
+    async create(req, res) {
+        const { id, password, crm } = req.body;
 
         const encryptedPass = await bcrypt.hash(password, 12);
     
@@ -27,7 +37,7 @@ module.exports = {
                 password: encryptedPass,
                 crm
             });
-            return response.json({ id });
+            return res.json({ id });
         } catch(err) {
             console.log('Could not insert user!')
         }
