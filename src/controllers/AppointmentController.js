@@ -40,7 +40,6 @@ module.exports = {
             .where('id', id)
             .select('patient_id')
             .first();
-
         if (appointment.patient_id !== req.userId && appointment.doctor_id !== req.userId) {
             return res.status(401).json({ error: 'Operation not permitted.' });
         }

@@ -30,6 +30,6 @@ routes.get('/profile', verifyJwt, ProfileController.index);
 
 routes.get('/appointments', verifyJwt, AppointmentController.index);
 routes.post('/appointments', verifyJwt, AppointmentController.create);
-routes.delete('/appontments/:id', verifyJwt, AppointmentController.delete);
+routes.delete('/appointments/:id', verifyJwt, AppointmentController.delete);
 
 module.exports = routes;
