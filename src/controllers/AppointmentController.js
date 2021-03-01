@@ -22,12 +22,12 @@ module.exports = {
     },
 
     async create(req, res) {
-        const { date, doctor_id } = req.body;
+        const { date, doctor_id, patient_id } = req.body;
 
         const [id] = await connection('appointments').insert({
             date,
-            doctor_id,
-            patient_id: req.userId,
+            doctor_id: req.userCrm ? req.userId : doctor_id,
+            patient_id: req.userCrm ? patient_id : req.userId
         });
 
         return res.json({ id });
