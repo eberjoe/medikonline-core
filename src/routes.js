@@ -17,13 +17,15 @@ const UserController = require('./controllers/UserController');
 const AppointmentController = require('./controllers/AppointmentController');
 const ProfileController = require('./controllers/ProfileController');
 const SessionController = require('./controllers/SessionController');
+const LoginCheckController = require('./controllers/LoginCheckController');
 
 const routes = express.Router();
 
 routes.post('/sessions', SessionController.create);
 
+routes.get('/logincheck/:id', LoginCheckController.index);
+
 routes.get('/users/:isDoc?', verifyJwt, UserController.index);
-routes.get('/users/:id', UserController.check);
 routes.post('/users', UserController.create);
 
 routes.get('/profile', verifyJwt, ProfileController.index);

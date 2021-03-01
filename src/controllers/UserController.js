@@ -17,15 +17,6 @@ module.exports = {
         return res.json(users);
     },
 
-    async check(req, res) {
-        const { id } = req.params;
-        const user = await connection('users')
-            .where('id', id)
-            .select('id')
-            .first();
-        return res.json(user);
-    },
-
     async create(req, res) {
         const { id, password, crm } = req.body;
 
