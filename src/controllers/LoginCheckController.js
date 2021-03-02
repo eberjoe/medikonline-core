@@ -4,9 +4,9 @@ const connection = require('../database/connection');
    async index(req, res) {
       const { id } = req.params;
       const user = await connection('users')
-          .where('id', id)
-          .select('id')
-          .first();
+        .where('id', id)
+        .select('id')
+        .first();
       return res.json(user);
   }
 }
