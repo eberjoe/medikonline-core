@@ -1,6 +1,6 @@
 # Backend do projeto MEDIKONLINE
 
-Este repositório contém a parte de *backend* em **Node.js** para o projeto **MEDIKONLINE**, uma aplicação que conecta pacientes e médicos. Acesse o frontend aqui:
+Este repositório contém a parte de *backend* em **Node.js** para o projeto **MEDIKONLINE**, uma aplicação que conecta pacientes e médicos. Acesse o *frontend* aqui:
 https://github.com/eberjoe/medikonline-web
 
 ## Montagem do ambiente de desenvolvimento
