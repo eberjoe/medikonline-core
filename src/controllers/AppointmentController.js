@@ -38,7 +38,7 @@ module.exports = {
 
     const appointment = await connection('appointments')
       .where('id', id)
-      .select('patient_id')
+      .select('*')
       .first();
     if (appointment.patient_id !== req.userId && appointment.doctor_id !== req.userId) {
       return res.status(401).json({ error: 'Operation not permitted.' });
