@@ -7,7 +7,7 @@ const {
   userJoin,
   getCurrentUser,
   userLeave,
-  getRoomUsers
+  getAppointmentUsers
 } = require('./utils/users');
 
 const port = 3333;
