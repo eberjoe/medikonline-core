@@ -1,11 +1,9 @@
-const users = [];
+let users = [];
 
 // Join user to appointment
-function userJoin(id, userId, appointmentId) {
-  const user = { id, userId, appointmentId };
-
+function userJoin(socketId, id, appointmentId) {
+  const user = { socketId, id, appointmentId };
   users.push(user);
-
   return user;
 }
 
@@ -16,11 +14,9 @@ function getCurrentUser(id) {
 
 // User leaves appointment
 function userLeave(id) {
-  const index = users.findIndex(user => user.id === id);
-
-  if (index !== -1) {
-    return users.splice(index, 1)[0];
-  }
+  const excluded = users.filter(user => user.id === id);
+  users = users.filter(user => user.id !== id);
+  return excluded[0];
 }
 
 // Get users present to appointment

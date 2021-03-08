@@ -13,45 +13,44 @@ const {
 const port = 3333;
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {  cors: {    origin: 'http://localhost:3000',    methods: ['GET', 'POST']  }});
+const io = socketIo(server, { 
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']  }
+  }
+);
 
-io.on('connection', socket => {
-  socket.on('join', ({ userId, appointmentId }) => {
-    const user = userJoin(socket.id, userId, appointmentId);
+io.on('connection', socket => { socket.on('join', ({ id, appointmentId }) => {
+    const user = userJoin(socket.id, id, appointmentId);
     socket.join(user.appointmentId);
-    socket.broadcast
-      .to(user.appointmentId)
-      .emit(
-        'message',
-        `${user.userId} entrou na consulta.`
-      );
+    io.to(user.appointmentId).emit('movement', getAppointmentUsers(user.appointmentId));
+  });
 
-    io.to(user.appointmentId).emit('appointmentUsers', {
-      appointmentId: user.appointmentId,
-      users: getAppointmentUsers(user.appointmentId)
+  socket.on('chatMessage', ({ senderId, msg }) => {
+    const user = getCurrentUser(senderId);
+    io.to(user.appointmentId).emit('message', {
+      senderId,
+      tMessage: msg,
+      timestamp: new Date()
     });
   });
 
-  socket.on('chatMessage', msg => {
-    const user = getCurrentUser(socket.id);
-    io.to(user.appointmentId).emit('message', msg);
-  });
-
-  socket.on('disconnect', () => {
-    const user = userLeave(socket.id);
+  socket.on('leave', id => {
+    const user = userLeave(id);
 
     if (user) {
-      io.to(user.appointmentId).emit(
-        'message',
-        `${user.userId} saiu da consulta.`
-      );
-
-      io.to(user.appointmentId).emit('appointmentUsers', {
-        appointmentId: user.appointmentId,
-        users: getAppointmentUsers(user.appointmentId)
-      });
+      io.to(user.appointmentId).emit('movement', getAppointmentUsers(user.appointmentId));
     }
   })
+
+  socket.on('disconnecting', id => {
+    const user = userLeave(id);
+
+    if (user) {
+      io.to(user.appointmentId).emit('movement', getAppointmentUsers(user.appointmentId));
+    }
+  })
+
 });
 
 app.use(cors(/* add authorized origin here */));
