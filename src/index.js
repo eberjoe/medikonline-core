@@ -31,7 +31,17 @@ io.on('connection', socket => { socket.on('join', ({ id, appointmentId }) => {
     io.to(user.appointmentId).emit('message', {
       senderId,
       tMessage: msg,
-      timestamp: new Date()
+      timestamp: new Date(),
+      isBroadcast: false
+    });
+  });
+
+  socket.on('broadcastMessage', ({ senderId, msg }) => {
+    socket.broadcast.emit('message', {
+      senderId,
+      tMessage: msg,
+      timestamp: new Date(),
+      isBroadcast: true
     });
   });
 
