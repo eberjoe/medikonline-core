@@ -30,8 +30,8 @@ routes.post('/users', UserController.create);
 
 routes.get('/profile', verifyJwt, ProfileController.index);
 
-routes.get('/appointments', verifyJwt, AppointmentController.index);
 routes.post('/appointments', verifyJwt, AppointmentController.create);
+routes.put('/appointments/:id', verifyJwt, AppointmentController.update);
 routes.delete('/appointments/:id', verifyJwt, AppointmentController.delete);
 
 module.exports = routes;
